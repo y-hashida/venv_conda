@@ -1,0 +1,8 @@
+/_venvs/*
+!/_venvs/.gitkeep
+
+/tmp/*
+!/tmp/.gitkeep
+
+/cmd/*
+!/cmd/.gitkeep
