@@ -28,19 +28,23 @@ function readlink_f() {
 }
 
 ## 以下メインの処理
-SCRIPT_PATH=$(readlink_f $0)
-SCRIPT_DIR=$(cd $(dirname ${SCRIPT_PATH}); pwd)
+# スクリプトの絶対パスを取得 (シンボリックリンクの場合はリンク先)
+SCRIPT_PATH="$(readlink_f "${0}")"
+# このスクリプト本体があるディレクトリの絶対パス
+SCRIPT_DIR=$(cd $(dirname "${SCRIPT_PATH}") && pwd)
+# このリポジトリのルートディレクトリパス
+REPO_DIR=$(cd "${SCRIPT_DIR}/.." && pwd)
 
 ## REQ_YML
-if [ -e "${SCRIPT_DIR}/../../req.yml" ]; then
-    REQ_YML="${SCRIPT_DIR}/../../req.yml"
+if [ -e "${REPO_DIR}/../req.yml" ]; then
+    REQ_YML="${REPO_DIR}/../req.yml"
 else
-    REQ_YML=${SCRIPT_DIR}/req.yml
+    REQ_YML="${REPO_DIR}/_scripts/req.yml"
 fi
 
 ## venv ディレクトリを用意
 REQUIREMENT_HASH="$(cat "${REQ_YML}" | openssl dgst -md5 | sed 's/^.* //')"
-VENV_DIR="$(cd ${SCRIPT_DIR}/../_venvs; pwd)/${REQUIREMENT_HASH}"
+VENV_DIR="$(cd ${REPO_DIR}/_venvs && pwd)/${REQUIREMENT_HASH}"
 
 ## anaconda のインストール
 bash ${SCRIPT_DIR}/prepare.sh ${VENV_DIR}

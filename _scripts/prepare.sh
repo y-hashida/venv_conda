@@ -3,14 +3,18 @@
 set -eu
 set -o pipefail
 
-SCRIPT_DIR=$(cd $(dirname $0); pwd)
-TMP_DIR=$(cd "${SCRIPT_DIR}/../tmp"; pwd)
+# このスクリプト本体があるディレクトリの絶対パス
+SCRIPT_DIR=$(cd $(dirname ${0}) && pwd)
+# リポジトリのルートディレクトリパス
+REPO_DIR=$(cd "${SCRIPT_DIR}/.." && pwd)
+# 一時ファイル用のディレクトリパス
+TMP_DIR="${REPO_DIR}/tmp"
 
 ## REQ_YML
-if [ -e "${SCRIPT_DIR}/../../req.yml" ]; then
-    REQ_YML="${SCRIPT_DIR}/../../req.yml"
+if [ -e "${REPO_DIR}/../req.yml" ]; then
+    REQ_YML="${REPO_DIR}/../req.yml"
 else
-    REQ_YML=${SCRIPT_DIR}/req.yml
+    REQ_YML="${REPO_DIR}/_scripts/req.yml"
 fi
 
 ## コマンドライン引数の受け取り
